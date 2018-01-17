@@ -1,18 +1,5 @@
 defmodule Cards do
   @moduledoc """
-  Documentation for Cards.
+  Playing cards management application
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Cards.hello
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
