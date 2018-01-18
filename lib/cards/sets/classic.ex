@@ -81,7 +81,7 @@ defmodule Cards.Sets.Classic do
 
   @doc """
   Return a string representation of a card
-  
+
   ## Example
       iex> Cards.Sets.Classic.init() |> List.first() |> Cards.Sets.Classic.display()
       "Ace of spades"
@@ -95,16 +95,15 @@ defmodule Cards.Sets.Classic do
   Return a string representation of a card
 
   Options passed to this function allow for customisation of the card representation.
-  
+
   ## Example
       iex> Cards.Sets.Classic.init() |> List.first() |> Cards.Sets.Classic.display()
       "Ace of spades"
 
   """
   def display(card, _opts) do
-    card.name <> " of " <> Atom.to_string(card.suit) <> "s"  
+    card.name <> " of " <> Atom.to_string(card.suit) <> "s"
   end
-  
 
   @spec generate_set(jokers :: integer) :: [t]
   defp generate_set(jokers) do

@@ -35,11 +35,11 @@ defmodule Cards.Deck do
   """
   @spec count(t) :: integer
   def count(deck) do
-    deck |> list_cards |> length 
+    deck |> list_cards |> length
   end
 
   @doc """
-  Set the cards in a dec
+  Replace all the cards in a deck
   """
   def set_cards(deck, cards) do
     Agent.update(via_tuple(deck), fn _cards -> cards end)
@@ -215,6 +215,37 @@ defmodule Cards.Deck do
     end
   end
 
+  @doc """
+  Place cards onto / into a deck
+
+  ## Params
+  - `deck` destination deck
+  - `cards` list of cards to place
+  - `location` where to place the cards. There are 3 options for the location:
+      - `:top` - place cards on the top of the deck
+      - `:bottom` - place cards on the bottom of the deck
+      - `:random` - insert cards randomly into the deck
+
+  ## Examples
+      iex> Cards.create_deck(:place_top, [3, 4, 5])
+      iex> Cards.Deck.place_cards(:place_top, [2])
+      :ok
+      iex> Cards.Deck.list_cards(:place_top)
+      [2, 3, 4, 5]
+
+      iex> Cards.create_deck(:place_bot, [3, 4, 5])
+      iex> Cards.Deck.place_cards(:place_bot, [6], :bottom)
+      :ok
+      iex> Cards.Deck.list_cards(:place_bot)
+      [3, 4, 5, 6]
+
+      iex> Cards.create_deck(:place_random, [3, 4, 5, 6])
+      iex> Cards.Deck.place_cards(:place_random, [2, 7], :random)
+      :ok
+      iex> Cards.Deck.count(:place_random)
+      6
+
+  """
   def place_cards(deck, cards, location \\ :top)
 
   def place_cards(deck, cards, location) when location === :top do
@@ -226,18 +257,16 @@ defmodule Cards.Deck do
   end
 
   def place_cards(deck, cards, location) when location === :random do
-    deck_cards = list_cards(deck)
-
-    Enum.each(cards, fn card ->
-      deck_cards = place_card(deck_cards, card)
-      deck_cards
-    end)
-
-    set_cards(deck, deck_cards)
+    set_cards(deck, place_card(list_cards(deck), cards))
   end
 
-  defp place_card(cards, card) do
-    List.insert_at(cards, :rand.uniform(length(cards)) - 1, card)
+  defp place_card(deck_cards, cards) do
+    if length(cards) === 1 do
+      List.insert_at(deck_cards, :rand.uniform(length(deck_cards)) - 1, hd(cards))
+    else
+      deck_cards = List.insert_at(deck_cards, :rand.uniform(length(deck_cards)) - 1, hd(cards))
+      place_card(deck_cards, tl(cards))
+    end
   end
 
   @doc """

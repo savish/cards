@@ -48,11 +48,11 @@ defmodule Cards.Set do
   Equality between cards is used for a number of deck manipulation methods
   """
   @callback equals?(first :: term, other :: term) :: boolean
-  
+
   @doc """
   Return a string representation of the card
 
   The display can be controlled by options given to the function
   """
-  @callback display(card :: term, opts :: map | nil) :: String.t 
+  @callback display(card :: term, opts :: map | nil) :: String.t()
 end
