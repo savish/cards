@@ -2,5 +2,8 @@
   "files.exclude": {
     "**/_build": true,
     "**/deps": true
-  }
+  },
+  "editor.rulers": [
+    98
+  ]
 }

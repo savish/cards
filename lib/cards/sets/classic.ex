@@ -19,11 +19,12 @@ defmodule Cards.Sets.Classic do
   @typedoc """
   Defines the structure of a `Card` in this set
   """
-  @type card :: %{
-    suit: atom,
-    value: integer,
-    name: String.t
-  }
+  @type t :: %{
+          suit: atom,
+          value: integer,
+          name: String.t(),
+          set: atom
+        }
 
   @doc """
   Initialize a set of playing cards
@@ -42,7 +43,7 @@ defmodule Cards.Sets.Classic do
       55
 
   """
-  @spec init(opts :: map) :: [card]
+  @spec init(opts :: map) :: [t()]
   def init(%{jokers: jokers} = _opts) do
     generate_set(jokers)
   end
@@ -58,12 +59,54 @@ defmodule Cards.Sets.Classic do
       52
 
   """
-  @spec init() :: [card]
+  @spec init() :: [t]
   def init do
     generate_set(0)
   end
 
-  @spec generate_set(jokers :: integer) :: [card]
+  @doc """
+  Determines if two cards in the set are equal
+
+  Cards are determined to be equal if they are of the same suit and have the same value.
+
+  ## Example
+      iex> first = Cards.Sets.Classic.init() |> List.first()
+      iex> Cards.Sets.Classic.equals?(first, %{suit: :spade, value: 1, name: "Ace"})
+      true
+
+  """
+  def equals?(first, other) do
+    display(first) === display(other)
+  end
+
+  @doc """
+  Return a string representation of a card
+  
+  ## Example
+      iex> Cards.Sets.Classic.init() |> List.first() |> Cards.Sets.Classic.display()
+      "Ace of spades"
+
+  """
+  def display(card) do
+    display(card, nil)
+  end
+
+  @doc """
+  Return a string representation of a card
+
+  Options passed to this function allow for customisation of the card representation.
+  
+  ## Example
+      iex> Cards.Sets.Classic.init() |> List.first() |> Cards.Sets.Classic.display()
+      "Ace of spades"
+
+  """
+  def display(card, _opts) do
+    card.name <> " of " <> Atom.to_string(card.suit) <> "s"  
+  end
+  
+
+  @spec generate_set(jokers :: integer) :: [t]
   defp generate_set(jokers) do
     cards =
       Enum.flat_map([:spade, :heart, :diamond, :clover], fn suit ->
@@ -80,12 +123,12 @@ defmodule Cards.Sets.Classic do
     cards
   end
 
-  @spec generate_card(suit :: atom, value :: integer | nil) :: card 
+  @spec generate_card(suit :: atom, value :: integer | nil) :: t
   defp generate_card(suit, value \\ 0) do
-    %{suit: suit, value: value, name: value_name(value)}
+    %{suit: suit, value: value, name: value_name(value), set: __MODULE__}
   end
 
-  @spec value_name(value :: integer) :: String.t
+  @spec value_name(value :: integer) :: String.t()
   defp value_name(value) do
     case value do
       0 -> "Joker"
