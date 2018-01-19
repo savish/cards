@@ -5,7 +5,7 @@ defmodule Cards.DeckTest do
   alias Cards.Deck
 
   test "shuffling a deck always returns a new order for the deck" do
-    Cards.create_deck(:shuffle_deck, [1, 2, 3, 4, 5])
+    Cards.Decks.create_deck(:shuffle_deck, [1, 2, 3, 4, 5])
     pre_suffle = Deck.list_cards(:shuffle_deck)
     Deck.shuffle(:shuffle_deck)
     post_shuffle = Deck.list_cards(:shuffle_deck)

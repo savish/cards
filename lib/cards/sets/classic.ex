@@ -14,17 +14,9 @@ defmodule Cards.Sets.Classic do
   `Cards.Set`
   """
 
-  @behaviour Cards.Set
+  alias Cards.Sets.Classic.Card
 
-  @typedoc """
-  Defines the structure of a `Card` in this set
-  """
-  @type t :: %{
-          suit: atom,
-          value: integer,
-          name: String.t(),
-          set: atom
-        }
+  @behaviour Cards.Set
 
   @doc """
   Initialize a set of playing cards
@@ -43,7 +35,7 @@ defmodule Cards.Sets.Classic do
       55
 
   """
-  @spec init(opts :: map) :: [t()]
+  @spec init(opts :: map) :: [%Card{}]
   def init(%{jokers: jokers} = _opts) do
     generate_set(jokers)
   end
@@ -59,7 +51,7 @@ defmodule Cards.Sets.Classic do
       52
 
   """
-  @spec init() :: [t]
+  @spec init() :: [%Card{}]
   def init do
     generate_set(0)
   end
@@ -105,7 +97,7 @@ defmodule Cards.Sets.Classic do
     card.name <> " of " <> Atom.to_string(card.suit) <> "s"
   end
 
-  @spec generate_set(jokers :: integer) :: [t]
+  @spec generate_set(jokers :: integer) :: [%Card{}]
   defp generate_set(jokers) do
     cards =
       Enum.flat_map([:spade, :heart, :diamond, :clover], fn suit ->
@@ -122,9 +114,9 @@ defmodule Cards.Sets.Classic do
     cards
   end
 
-  @spec generate_card(suit :: atom, value :: integer | nil) :: t
+  @spec generate_card(suit :: atom, value :: integer | nil) :: %Card{}
   defp generate_card(suit, value \\ 0) do
-    %{suit: suit, value: value, name: value_name(value), set: __MODULE__}
+    %Card{suit: suit, value: value, name: value_name(value)}
   end
 
   @spec value_name(value :: integer) :: String.t()

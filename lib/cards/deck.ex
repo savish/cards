@@ -22,6 +22,10 @@ defmodule Cards.Deck do
     Agent.start_link(fn -> cards || [] end, name: via_tuple(name))
   end
 
+  def create([], name, cards) do
+    create(name, cards)
+  end
+
   @doc """
   List all the cards in a deck
   """
@@ -86,26 +90,26 @@ defmodule Cards.Deck do
   `{:error, :empty_deck}` - attempting to draw cards from an empty deck
 
   ## Examples
-      iex> Cards.create_deck(:draw_top, [3,4,5])
+      iex> Cards.Decks.create_deck(:draw_top, [3,4,5])
       iex> Cards.Deck.draw_cards(:draw_top, 1)
       {:ok, [3]}
       iex> Cards.Deck.list_cards(:draw_top)
       [4, 5]
 
-      iex> Cards.create_deck(:draw_bot, [3,4,5])
+      iex> Cards.Decks.create_deck(:draw_bot, [3,4,5])
       iex> Cards.Deck.draw_cards(:draw_bot, 1, :bottom)
       {:ok, [5]}
       iex> Cards.Deck.list_cards(:draw_bot)
       [3, 4]
 
-      iex> Cards.create_deck(:draw_random, [3,4,5,6])
+      iex> Cards.Decks.create_deck(:draw_random, [3,4,5,6])
       iex> {:ok, drawn} = Cards.Deck.draw_cards(:draw_random, 2, :random)
       iex> length(drawn)
       2
       iex> Cards.Deck.list_cards(:draw_random) |> length
       2
 
-      iex> Cards.create_deck(:draw_empty, [])
+      iex> Cards.Decks.create_deck(:draw_empty, [])
       iex> Cards.Deck.draw_cards(:draw_empty)
       {:error, :empty_deck}
 
@@ -179,11 +183,11 @@ defmodule Cards.Deck do
   Take specific cards from a deck
 
   ## Examples
-      iex> Cards.create_deck(:taken_cards, Cards.Sets.Classic.init())
+      iex> Cards.Decks.create_deck(:taken_cards, Cards.Sets.Classic.init())
       iex> top_card = Cards.Deck.peek_top!(:taken_cards) |> hd()
       iex> {:ok, taken} = Cards.Deck.take_cards(:taken_cards, [top_card])
       iex> taken_card = taken |> hd
-      iex> taken_card.set.display(taken_card)
+      iex> Cards.Protocols.Display.display(taken_card)
       "Ace of spades"
       iex> Cards.Deck.list_cards(:taken_cards) |> length()
       51
@@ -195,6 +199,7 @@ defmodule Cards.Deck do
     if length(deck_cards) === 0 do
       {:error, :empty_deck}
     else
+      # TODO: Replace equality with protocol method
       indices = Enum.map(cards, fn card -> Enum.find_index(deck_cards, &(&1 === card)) end)
       taken_cards = Enum.map(indices, fn ix -> Enum.at(deck_cards, ix) end)
       deck_cards = Enum.reject(deck_cards, fn card -> card in taken_cards end)
@@ -227,19 +232,19 @@ defmodule Cards.Deck do
       - `:random` - insert cards randomly into the deck
 
   ## Examples
-      iex> Cards.create_deck(:place_top, [3, 4, 5])
+      iex> Cards.Decks.create_deck(:place_top, [3, 4, 5])
       iex> Cards.Deck.place_cards(:place_top, [2])
       :ok
       iex> Cards.Deck.list_cards(:place_top)
       [2, 3, 4, 5]
 
-      iex> Cards.create_deck(:place_bot, [3, 4, 5])
+      iex> Cards.Decks.create_deck(:place_bot, [3, 4, 5])
       iex> Cards.Deck.place_cards(:place_bot, [6], :bottom)
       :ok
       iex> Cards.Deck.list_cards(:place_bot)
       [3, 4, 5, 6]
 
-      iex> Cards.create_deck(:place_random, [3, 4, 5, 6])
+      iex> Cards.Decks.create_deck(:place_random, [3, 4, 5, 6])
       iex> Cards.Deck.place_cards(:place_random, [2, 7], :random)
       :ok
       iex> Cards.Deck.count(:place_random)
@@ -273,7 +278,7 @@ defmodule Cards.Deck do
   Shuffles a deck of cards
 
   ## Example
-      iex> Cards.create_deck(:shuffle)
+      iex> Cards.Decks.create_deck(:shuffle)
       iex> Cards.Deck.shuffle(:shuffle)
       :ok
 
