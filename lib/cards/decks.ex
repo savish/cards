@@ -1,9 +1,9 @@
 defmodule Cards.Decks do
   @moduledoc """
-  Manage card decks
+  Manage multiple card decks
 
   This module contains functionality concerned with the overall management of a `Deck`s lifecycle
-  from creation to deletion.
+  from creation to deletion. Additionally, inter-`Deck` management funnctinality is defined here
 
   Functionality concerned with a single `Deck` lives in the `Cards.Deck` module.
   """

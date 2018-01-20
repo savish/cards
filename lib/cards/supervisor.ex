@@ -9,8 +9,8 @@ defmodule Cards.Supervisor do
 
   def init(:ok) do
     children = [
-      {Registry, [keys: :unique, name: :deck_registry]},
-      Cards.Decks
+      Cards.Decks,
+      {Registry, [keys: :unique, name: :deck_registry]}
     ]
 
     Supervisor.init(children, strategy: :one_for_all)

@@ -22,9 +22,9 @@ defmodule Cards.Deck do
     Agent.start_link(fn -> cards || [] end, name: via_tuple(name))
   end
 
-  def create([], name, cards) do
-    create(name, cards)
-  end
+  # def start_link([], name, cards) do
+  #   start_link(name, cards)
+  # end
 
   @doc """
   List all the cards in a deck

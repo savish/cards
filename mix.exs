@@ -5,9 +5,10 @@ defmodule Cards.MixProject do
     [
       app: :cards,
       version: "0.1.0",
-      elixir: "~> 1.6-dev",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -22,8 +23,13 @@ defmodule Cards.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev}
+      {:ex_doc, "~> 0.18", only: :dev}
+    ]
+  end
+
+  defp docs do
+    [
+      extras: ["README.md"]
     ]
   end
 end
